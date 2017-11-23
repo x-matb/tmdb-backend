@@ -6,7 +6,8 @@ class MoviesController extends Controller
 
     function get($request)
     {
-
+        $data = $this->movieService->retrieve($this->args['pk']);
+        return $data;
     }
 
     function __construct(array $args = array())

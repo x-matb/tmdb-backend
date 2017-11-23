@@ -43,4 +43,14 @@ class MoviesControllerTest extends TestCase
         $controller->movieService = $mock;
         $this->assertEquals($expected, $controller->list(array('get'=> array('title'=>'something'))));
     }
+
+    function testGetCallRetrieve()
+    {
+        $expected = (object) array(2);
+        $mock = $this->createMock(MovieService::class);
+        $mock->method('retrieve')->willReturn($expected);
+        $controller = new MoviesController(array('pk'=> 1));
+        $controller->movieService = $mock;
+        $this->assertEquals($expected, $controller->get(array('get'=> array('title'=>'something'))));
+    }
 }

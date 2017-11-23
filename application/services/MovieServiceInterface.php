@@ -6,4 +6,6 @@ interface MovieServiceInterface
 
     function upcomings($page): array;
 
+    function retrieve($id): stdClass;
+
 }

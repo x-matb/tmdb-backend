@@ -22,7 +22,7 @@ spl_autoload_register('autoload');
 
 $urls = Array(
     "/^\/movies\/?$/" => 'MoviesController',
-    '/^\/movies\/(?<pk>[0-9]+)\/?$/' => 'MovieController'
+    '/^\/movies\/(?<pk>[0-9]+)\/?$/' => 'MoviesController'
 );
 
 

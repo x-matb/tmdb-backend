@@ -36,17 +36,21 @@ class MovieService implements MovieServiceInterface
         $get = http_build_query($query);
         $json = $this->get($url . '?' . $get);
         $obj = json_decode($json);
-        return $obj->results;
+        return $obj;
+    }
+
+    function retrieve($id): stdClass {
+        return $this->request("movie/{$id}", array());
     }
 
     function search($title, $page=1): array
     {
         $query = array('query'=> $title, 'page'=> $page);
-        return $this->request('search/movie', $query);
+        return $this->request('search/movie', $query)->results;
     }
 
     function upcomings($page=1): array
     {
-        return $this->request('movie/upcoming', array('page'=>$page));
+        return $this->request('movie/upcoming', array('page'=>$page))->results;
     }
 }

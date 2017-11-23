@@ -11,46 +11,60 @@ class MovieServiceTest extends TestCase
     }
 
     function testSearchWithPage() {
-        $expected = array(1);
+        $expected_results = array((object) array("id"=>1));
+        $expected = (object) array("results"=> $expected_results);
         $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
             ->setMethodsExcept(array('search'))->getMock();
         $mock->method('request')->willReturn($expected);
         $searchOutput = $mock->search('title', 1);
-        $this->assertEquals($expected, $searchOutput);
+        $this->assertEquals($expected_results, $searchOutput);
     }
 
     function testSearch() {
-        $expected = array(2);
+        $expected_results = array((object) array("id"=>2));
+        $expected = (object) array("results"=> $expected_results);
         $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
             ->setMethodsExcept(array('search'))->getMock();
         $mock->method('request')->willReturn($expected);
         $searchOutput = $mock->search('title');
-        $this->assertEquals($expected, $searchOutput);
+        $this->assertEquals($expected_results, $searchOutput);
     }
 
     function testUpcomingsWithPage() {
-        $expected = array(1);
+        $expected_results = array((object) array("id"=>1));
+        $expected = (object) array("results"=> $expected_results);
         $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
             ->setMethodsExcept(array('upcomings'))->getMock();
         $mock->method('request')->willReturn($expected);
         $upcomings = $mock->upcomings(1);
-        $this->assertEquals($expected, $upcomings);
+        $this->assertEquals($expected_results, $upcomings);
     }
 
     function testUpcomings() {
-        $expected = array(2);
+        $expected_results = array((object) array("id"=>2));
+        $expected = (object) array("results"=> $expected_results);
         $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
             ->setMethodsExcept(array('upcomings'))->getMock();
         $mock->method('request')->willReturn($expected);
         $upcomings = $mock->upcomings();
-        $this->assertEquals($expected, $upcomings);
+        $this->assertEquals($expected_results, $upcomings);
+    }
+
+    function testRetrieve() {
+        $expected = (object) array("id"=>2);
+        $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
+            ->setMethodsExcept(array('retrieve'))->getMock();
+        $mock->method('request')->willReturn($expected);
+        $retrieve = $mock->retrieve(123);
+        $this->assertEquals($expected, $retrieve);
     }
 
     function testRequest() {
+        $expected = (object) array("results"=> (object) array("id"=>1));
         $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
             ->setMethodsExcept(array('request'))->getMock();
-        $mock->method('get')->willReturn('{"results":[]}');
-        $this->assertEquals(array(), $mock->request('test', ''));
+        $mock->method('get')->willReturn('{"results":{"id": 1}}');
+        $this->assertEquals($expected , $mock->request('test', ''));
     }
 
 }
