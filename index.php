@@ -1,2 +1,4 @@
 <?php
-print_r($_GET);
+require_once 'application/Router.php';
+
+new Router();
