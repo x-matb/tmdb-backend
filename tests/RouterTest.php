@@ -1,0 +1,81 @@
+<?php
+
+use PHPUnit\Framework\TestCase;
+
+
+class TestRouter extends TestCase
+{
+    protected $urls;
+
+
+    protected function setUp()
+    {
+
+        $this->urls =  Array(
+            "/^\/test\/?$/" => $this->createMock(MoviesController::class),
+            "/^\/test\/(?<pk>[0-9]+)\/?$/" => $this->createMock(MoviesController::class)
+        );
+    }
+
+    protected function tearDown()
+    {
+        $this->urls = null;
+    }
+
+    function testConstructSetRouterUrl()
+    {
+        $router = new Router(Array('REQUEST_URI'=>'test'), $this->urls);
+
+        $this->assertEquals(
+            $this->urls,
+            $router->urls
+        );
+
+        $this->assertEquals(
+          'test',
+          $router->request_uri
+        );
+    }
+
+    function testFetchControllerInvalidURI()
+    {
+        $router = new Router(Array('REQUEST_URI'=>'invalid_path'), $this->urls);
+        $controller = $router->fetchController();
+        $this->assertNull($controller);
+        return $router;
+    }
+
+    function testFetchControllerValidURI()
+    {
+        $router = new Router(Array('REQUEST_URI'=>'/test'), $this->urls);
+        $controller = $router->fetchController();
+        $this->assertInstanceOf(MoviesController::class, $controller);
+        return $router;
+    }
+
+    function testFetchControllerValidURIWithPK()
+    {
+        $router = new Router(Array('REQUEST_URI'=>'/test/123'), $this->urls);
+        $controller = $router->fetchController();
+        $this->assertInstanceOf(MoviesController::class, $controller);
+        $this->assertEquals(
+            '123',
+            $controller->args['pk']
+        );
+    }
+
+    /**
+     * @depends testFetchControllerInvalidURI
+     */
+    function testRunWithoutController($router)
+    {
+        $output = $router->run();
+        $this->assertEquals(null, $output);
+        $this->assertEquals(404, http_response_code());
+    }
+
+    function testRunController()
+    {
+        # TODO: Create test
+    }
+}
