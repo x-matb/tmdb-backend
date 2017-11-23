@@ -2,20 +2,33 @@
 
 class MoviesController extends Controller
 {
-    function get()
+    public $movieService = null;
+
+    function get($request)
     {
 
     }
 
-    function list()
+    function __construct(array $args = array())
     {
+        parent::__construct($args);
+        $this->movieService = MovieService::getInstance();
     }
 
-    function dispatch(): JsonResponse {
-        if (isset($this->args['pk'])) {
-            $data = $this->get();
+    function list($request)
+    {
+        if (isset($request['get']['title'])) {
+            return $this->movieService->search($request['get']['title'], $request['get']['page'] ?? 1);
         } else {
-            $data = $this->list();
+            return $this->movieService->upcomings($request['get']['page'] ?? 1);
+        }
+    }
+
+    function dispatch($request): JsonResponse {
+        if (isset($this->args['pk'])) {
+            $data = $this->get($request);
+        } else {
+            $data = $this->list($request);
         }
         return new JsonResponse($data);
     }

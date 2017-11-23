@@ -8,7 +8,14 @@ class Router
     function __construct($server, $urls)
     {
         $this->urls = $urls;
-        $this->request_uri = $server['REQUEST_URI'];
+        $this->request_uri = $server['REDIRECT_URL'];
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
+    function buildRequest() {
+        return array('get'=>$_GET);
     }
 
     function run()
@@ -19,7 +26,8 @@ class Router
             return;
         }
         # TODO: Dispatch differently depending on the HTTP VERB (aka method)
-        $response = $controller->dispatch();
+        # TODO: Add relevant information to the dispatch as $_GET, $_POST, etc
+        $response = $controller->dispatch($this->buildRequest());
         header($response->getContentType());
         echo $response->getContent();
     }

@@ -11,6 +11,14 @@
 		"phpunit/phpunit": "^6.4"
 	},
     "autoload": {
-      "psr-0": { "": ["application/", "application/controllers/", "application/views/"] }
+      "psr-0": {
+        "": [
+          "application/",
+          "application/controllers/",
+          "application/views/",
+          "application/models/",
+          "application/services/"
+        ]
+      }
     }
 }

@@ -24,7 +24,7 @@ class TestRouter extends TestCase
 
     function testConstructSetRouterUrl()
     {
-        $router = new Router(Array('REQUEST_URI'=>'test'), $this->urls);
+        $router = new Router(Array('REDIRECT_URL'=>'test'), $this->urls);
 
         $this->assertEquals(
             $this->urls,
@@ -39,7 +39,7 @@ class TestRouter extends TestCase
 
     function testFetchControllerInvalidURI()
     {
-        $router = new Router(Array('REQUEST_URI'=>'invalid_path'), $this->urls);
+        $router = new Router(Array('REDIRECT_URL'=>'invalid_path'), $this->urls);
         $controller = $router->fetchController();
         $this->assertNull($controller);
         return $router;
@@ -47,7 +47,15 @@ class TestRouter extends TestCase
 
     function testFetchControllerValidURI()
     {
-        $router = new Router(Array('REQUEST_URI'=>'/test'), $this->urls);
+        $router = new Router(Array('REDIRECT_URL'=>'/test'), $this->urls);
+        $controller = $router->fetchController();
+        $this->assertInstanceOf(MoviesController::class, $controller);
+        return $router;
+    }
+
+    function testFetchControllerValidURIWithQuery()
+    {
+        $router = new Router(Array('REDIRECT_URL'=>'/test'), $this->urls);
         $controller = $router->fetchController();
         $this->assertInstanceOf(MoviesController::class, $controller);
         return $router;
@@ -55,7 +63,7 @@ class TestRouter extends TestCase
 
     function testFetchControllerValidURIWithPK()
     {
-        $router = new Router(Array('REQUEST_URI'=>'/test/123'), $this->urls);
+        $router = new Router(Array('REDIRECT_URL'=>'/test/123'), $this->urls);
         $controller = $router->fetchController();
         $this->assertInstanceOf(MoviesController::class, $controller);
         $this->assertEquals(

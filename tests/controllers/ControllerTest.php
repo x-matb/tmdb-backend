@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 
 class NotAbstractController extends Controller
 {
-    function dispatch(): JsonResponse {}
+    function dispatch($request): JsonResponse {}
 }
 
 class ControllerTest extends TestCase

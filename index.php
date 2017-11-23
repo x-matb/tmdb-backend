@@ -11,11 +11,14 @@ function autoload($name) {
     # TODO: Improve to pass dir dinamically
     autoloadPath('/', $name);
     autoloadPath('application/', $name);
-    autoloadPath('application/controllers/', $name);
     autoloadPath('application/views/', $name);
+    autoloadPath('application/controllers/', $name);
+    autoloadPath('application/models/', $name);
+    autoloadPath('application/services/', $name);
 }
 
 spl_autoload_register('autoload');
+
 
 $urls = Array(
     "/^\/movies\/?$/" => 'MoviesController',

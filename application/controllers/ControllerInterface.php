@@ -2,5 +2,5 @@
 
 interface ControllerInterface
 {
-    function dispatch(): JsonResponse;
+    function dispatch($request): JsonResponse;
 }
