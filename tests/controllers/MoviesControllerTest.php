@@ -26,7 +26,7 @@ class MoviesControllerTest extends TestCase
 
     function testListCallUpcomings()
     {
-        $expected = array(1);
+        $expected = array();
         $mock = $this->createMock(MovieService::class);
         $mock->method('upcomings')->willReturn($expected);
         $controller = new MoviesController();
@@ -36,7 +36,7 @@ class MoviesControllerTest extends TestCase
 
     function testListCallSearch()
     {
-        $expected = array(2);
+        $expected = array();
         $mock = $this->createMock(MovieService::class);
         $mock->method('search')->willReturn($expected);
         $controller = new MoviesController();
@@ -46,11 +46,17 @@ class MoviesControllerTest extends TestCase
 
     function testGetCallRetrieve()
     {
-        $expected = (object) array(2);
+        $expected = (object) array(
+            'id' => 1,
+            'original_title' => 'title',
+            'poster_path' => '/path.jpg',
+            'release_date' => '2016-10-10',
+            'overview' => 'this is an overview'
+        );
         $mock = $this->createMock(MovieService::class);
         $mock->method('retrieve')->willReturn($expected);
         $controller = new MoviesController(array('pk'=> 1));
         $controller->movieService = $mock;
-        $this->assertEquals($expected, $controller->get(array('get'=> array('title'=>'something'))));
+        $this->assertInstanceOf(Movie::class, $controller->get(array('get'=> array('title'=>'something'))));
     }
 }

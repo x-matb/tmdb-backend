@@ -7,7 +7,7 @@ class MoviesController extends Controller
     function get($request)
     {
         $data = $this->movieService->retrieve($this->args['pk']);
-        return $data;
+        return Movie::createFromObject($data);
     }
 
     function __construct(array $args = array())
@@ -19,10 +19,11 @@ class MoviesController extends Controller
     function list($request)
     {
         if (isset($request['get']['title'])) {
-            return $this->movieService->search($request['get']['title'], $request['get']['page'] ?? 1);
+            $list = $this->movieService->search($request['get']['title'], $request['get']['page'] ?? 1);
         } else {
-            return $this->movieService->upcomings($request['get']['page'] ?? 1);
+            $list = $this->movieService->upcomings($request['get']['page'] ?? 1);
         }
+        return Movie::createFromObjectList($list);
     }
 
     function dispatch($request): JsonResponse {

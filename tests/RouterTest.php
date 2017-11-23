@@ -82,6 +82,21 @@ class TestRouter extends TestCase
         $this->assertEquals(404, http_response_code());
     }
 
+
+    function testReturn500OnException()
+    {
+        $mock = $this->getMockBuilder(Router::class)->disableOriginalConstructor()
+            ->setMethodsExcept(array('run', 'fetchController'))->getMock();
+
+        $mock->urls = $this->urls;
+        $mock->request_uri = '/test/123';
+        $mock->method('dispatchController')->will($this->throwException(new Exception()));
+
+        $output = $mock->run();
+        $this->assertEquals(null, $output);
+        $this->assertEquals(500, http_response_code());
+    }
+
     function testRunController()
     {
         # TODO: Create test
