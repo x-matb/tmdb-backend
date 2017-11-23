@@ -18,6 +18,10 @@ class Router
         return array('get'=>$_GET);
     }
 
+    function dispatchController($controller) {
+        return $controller->dispatch($this->buildRequest());
+    }
+
     function run()
     {
         $controller = $this->fetchController();
@@ -27,9 +31,15 @@ class Router
         }
         # TODO: Dispatch differently depending on the HTTP VERB (aka method)
         # TODO: Add relevant information to the dispatch as $_GET, $_POST, etc
-        $response = $controller->dispatch($this->buildRequest());
+        try {
+            $response = $this->dispatchController($controller);
+        } catch (Exception $e) {
+            http_response_code(500);
+            return;
+        }
         header($response->getContentType());
         echo $response->getContent();
+
     }
 
     function fetchController()

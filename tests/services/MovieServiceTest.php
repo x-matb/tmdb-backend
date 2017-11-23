@@ -63,8 +63,19 @@ class MovieServiceTest extends TestCase
         $expected = (object) array("results"=> (object) array("id"=>1));
         $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
             ->setMethodsExcept(array('request'))->getMock();
-        $mock->method('get')->willReturn('{"results":{"id": 1}}');
+        $mock->method('get')->willReturn(array('response'=>'{"results":{"id": 1}}', 'status'=>200));
         $this->assertEquals($expected , $mock->request('test', ''));
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    function testRequestException() {
+        $expected = (object) array("results"=> (object) array("id"=>1));
+        $mock = $this->getMockBuilder(MovieService::class)->disableOriginalConstructor()
+            ->setMethodsExcept(array('request'))->getMock();
+        $mock->method('get')->willReturn(array('response'=>'{"results":{"id": 1}}', 'status'=>400));
+        $mock->request('test', '');
     }
 
 }

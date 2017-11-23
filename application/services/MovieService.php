@@ -26,7 +26,19 @@ class MovieService implements MovieServiceInterface
      * @codeCoverageIgnore
      */
     function get($url) {
-        return file_get_contents($url);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_HEADER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible;)");
+        curl_setopt($ch, CURLOPT_URL, $url);
+        $response = curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+        curl_close($ch);
+        $header = substr($response, 0, $header_size);
+        $body = substr($response, $header_size);
+        return array('response'=>$body, 'status'=>$status);
     }
 
     function request($suffix, $query, $language='en-US') {
@@ -34,8 +46,11 @@ class MovieService implements MovieServiceInterface
         $query['api_key'] = $this->apiKey;
         $query['language'] = $language;
         $get = http_build_query($query);
-        $json = $this->get($url . '?' . $get);
-        $obj = json_decode($json);
+        $response = $this->get($url . '?' . $get);
+        if ($response['status'] >= 400) {
+            throw new Exception("Something went wrong :( ");
+        }
+        $obj = json_decode($response['response']);
         return $obj;
     }
 
@@ -45,12 +60,14 @@ class MovieService implements MovieServiceInterface
 
     function search($title, $page=1): array
     {
+        # TODO: add cache to search
         $query = array('query'=> $title, 'page'=> $page);
         return $this->request('search/movie', $query)->results;
     }
 
     function upcomings($page=1): array
     {
+        # TODO: add cache to upcomings
         return $this->request('movie/upcoming', array('page'=>$page))->results;
     }
 }
