@@ -46,6 +46,7 @@ class MoviesControllerTest extends TestCase
 
     function testGetCallRetrieve()
     {
+        Movie::delete(1);
         $expected = (object) array(
             'id' => 1,
             'original_title' => 'title',

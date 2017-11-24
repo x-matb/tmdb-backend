@@ -6,8 +6,11 @@ class MoviesController extends Controller
 
     function get($request)
     {
-        $data = $this->movieService->retrieve($this->args['pk']);
-        return Movie::createFromObject($data);
+        $movie = Movie::get($this->args['pk']);
+        if (is_null($movie->id)) {
+            $movie = Movie::createFromObject($this->movieService->retrieve($this->args['pk']));
+        }
+        return $movie;
     }
 
     function __construct(array $args = array())
