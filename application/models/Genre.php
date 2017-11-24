@@ -3,7 +3,7 @@
 
 class Genre
 {
-    public $id;
+    public $id, $name;
 
     function __construct($id, $name=null)
     {

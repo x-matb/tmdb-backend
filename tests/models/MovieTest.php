@@ -5,6 +5,21 @@ use PHPUnit\Framework\TestCase;
 
 class MovieTest extends TestCase
 {
+    function testConstructSetProperties() {
+        $obj = (object) array(
+            'id' => 1,
+            'original_title' => 'title',
+            'poster_path' => '/path.jpg',
+            'release_date' => '2016-10-10',
+            'overview' => 'this is an overview',
+            'genres' => array(
+                (object) array('id' => 27, 'name' => 'Horror')
+            )
+        );
+        $genre = new Movie($obj->id, $obj->original_title, $obj->poster_path, $obj->release_date, $obj->overview);
+        $this->assertMovieEqualToObj($obj, $genre);
+    }
+
     function assertMovieEqualToObj($obj, $movie) {
         $this->assertEquals($obj->id, $movie->id);
         $this->assertEquals($obj->original_title, $movie->name);
