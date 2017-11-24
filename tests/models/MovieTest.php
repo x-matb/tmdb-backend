@@ -33,6 +33,10 @@ class MovieTest extends TestCase
     }
 
     function testCreateFromObject() {
+        Movie::delete(1);
+        $countBeforeMovies = Database::getInstance()->count('Movies');
+        $countBeforeMoviesGenres = Database::getInstance()->count('MoviesGenres');
+
         $obj = (object) array(
             'id' => 1,
             'original_title' => 'title',
@@ -45,10 +49,15 @@ class MovieTest extends TestCase
         );
         $out = Movie::createFromObject($obj);
         $this->assertMovieEqualToObj($obj, $out);
+        $this->assertEquals($countBeforeMovies+1, Database::getInstance()->count('Movies'));
+        $this->assertEquals($countBeforeMoviesGenres+1, Database::getInstance()->count('MoviesGenres'));
     }
 
     function testCreateFromObjectWithGenreIds() {
         Movie::delete(1);
+        $countBeforeMovies = Database::getInstance()->count('Movies');
+        $countBeforeMoviesGenres = Database::getInstance()->count('MoviesGenres');
+
         $obj = (object) array(
             'id' => 1,
             'original_title' => 'title',
@@ -59,6 +68,8 @@ class MovieTest extends TestCase
         );
         $out = Movie::createFromObject($obj);
         $this->assertMovieEqualToObj($obj, $out);
+        $this->assertEquals($countBeforeMovies+1, Database::getInstance()->count('Movies'));
+        $this->assertEquals($countBeforeMoviesGenres+2, Database::getInstance()->count('MoviesGenres'));
     }
 
     function testCreateFromObjectWithBackdrop() {

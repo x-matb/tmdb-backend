@@ -28,32 +28,44 @@ class Database
         return static::$self;
     }
 
+    function count($table) {
+        $query = "SELECT COUNT(*) FROM {$table}";
+        $res = $this->connection->query($query);
+        return $res->fetchColumn();
+    }
 
     function insert($query, $bind)
     {
         if ($stmt = $this->connection->prepare($query)) {
             $stmt->execute($bind);
-            return array('id' => $this->connection->lastInsertId(), 'rowsAffected' => $stmt->rowCount());
+            $rowsAffected = $stmt->rowCount();
+            $stmt->closeCursor();
+            return array('id' => $this->connection->lastInsertId(), 'rowsAffected' => $rowsAffected);
         }
     }
 
     function fetch($query, $bind) {
         if ($stmt = $this->connection->prepare($query)) {
             $stmt->execute($bind);
-            return $stmt->fetch(PDO::FETCH_ASSOC);
+            $out = $stmt->fetch(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            return $out;
         }
     }
 
     function fetchAll($query, $bind) {
         if ($stmt = $this->connection->prepare($query)) {
             $stmt->execute($bind);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $out = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $stmt->closeCursor();
+            return $out;
         }
     }
 
     function delete($query, $bind) {
         if ($stmt = $this->connection->prepare($query)) {
             $stmt->execute($bind);
+            $stmt->closeCursor();
         }
     }
 
