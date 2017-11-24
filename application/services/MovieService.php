@@ -70,4 +70,9 @@ class MovieService implements MovieServiceInterface
         # TODO: add cache to upcomings
         return $this->request('movie/upcoming', array('page'=>$page))->results;
     }
+
+    function genreList(): array
+    {
+        return $this->request('genre/movie/list', array())->genres;
+    }
 }

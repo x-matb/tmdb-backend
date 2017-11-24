@@ -13,7 +13,7 @@ class Movie
         $this->image = $image;
         $this->releaseDate = $releaseDate;
         $this->overview = $overview;
-//        $this->genres = new ArrayObject();
+        $this->genres = array();
     }
 
     public static function get($id) {
@@ -22,7 +22,9 @@ class Movie
         );
         $st = 'select * from Movies where id = :id';
         $data = Database::getInstance()->fetch($st, $bind);
-        return new Movie($data['id'], $data['name'], $data['image'], $data['release_date'], $data['overview']);
+        $movie = new Movie($data['id'], $data['name'], $data['image'], $data['release_date'], $data['overview']);
+        $movie->loadGenres();
+        return $movie;
     }
 
     public static function delete($id) {
@@ -42,7 +44,8 @@ class Movie
             ":overview" => $this->overview
         );
         $st = 'INSERT IGNORE Movies values (:id, :name, :image, :releaseDate, :overview)';
-        Database::getInstance()->insert($st, $bind);
+        $r = Database::getInstance()->insert($st, $bind);
+        return $r['rowsAffected'] > 0;
     }
 
     static function createFromObject($obj) {
@@ -52,7 +55,24 @@ class Movie
         $releaseDate = $obj->release_date;
         $overview = $obj->overview;
         $movie = new Movie($id, $name, $image, $releaseDate, $overview);
-        $movie->save();
+        if (property_exists($obj, 'genres')) {
+            foreach ($obj->genres as $genre) {
+                $movie->addGenre(new Genre($genre->id, $genre->name));
+            }
+        }
+
+        if (property_exists($obj, 'genre_ids')) {
+            foreach ($obj->genre_ids as $genre) {
+                $movie->addGenre(new Genre($genre));
+            }
+        }
+        if ($movie->save()) {
+            foreach ($movie->genres as $genre) {
+                $genre->associateMovie($movie->id);
+            }
+        }
+        $movie->genres = array();
+        $movie->loadGenres();
         return $movie;
     }
 
@@ -64,18 +84,19 @@ class Movie
         return $newList;
     }
 
-//    function addGenre($genre) {
-//        $this->genres->append($genre);
-//    }
-//
-//    function removeGenre($genre) {
-//        $this->genres->
-//        for ($this->genres as $existingGenre) {
-//            if ($existingGenre->id == $genre->id) {
-//
-//            }
-//        }
-//        $this->genres
-//    }
+    function addGenre($genre) {
+        array_push($this->genres, $genre);
+    }
 
+    function loadGenres() {
+        $bind = array(
+            ':id' => $this->id
+        );
+        $st = 'select g.* from Genres g left join MoviesGenres mg on g.id=mg.genre_id where mg.movie_id = :id';
+        $data = Database::getInstance()->fetchAll($st, $bind);
+        foreach ($data as $genreData) {
+            $genre = new Genre((int) $genreData['id'], $genreData['name']);
+            array_push($this->genres, $genre);
+        }
+    }
 }

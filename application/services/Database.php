@@ -33,7 +33,7 @@ class Database
     {
         if ($stmt = $this->connection->prepare($query)) {
             $stmt->execute($bind);
-            return $this->connection->lastInsertId();
+            return array('id' => $this->connection->lastInsertId(), 'rowsAffected' => $stmt->rowCount());
         }
     }
 
@@ -41,6 +41,13 @@ class Database
         if ($stmt = $this->connection->prepare($query)) {
             $stmt->execute($bind);
             return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+    }
+
+    function fetchAll($query, $bind) {
+        if ($stmt = $this->connection->prepare($query)) {
+            $stmt->execute($bind);
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
 

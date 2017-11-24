@@ -23,7 +23,24 @@ class MovieTest extends TestCase
             'original_title' => 'title',
             'poster_path' => '/path.jpg',
             'release_date' => '2016-10-10',
-            'overview' => 'this is an overview'
+            'overview' => 'this is an overview',
+            'genres' => array(
+                (object) array('id' => 27, 'name' => 'Horror')
+            )
+        );
+        $out = Movie::createFromObject($obj);
+        $this->assertMovieEqualToObj($obj, $out);
+    }
+
+    function testCreateFromObjectWithGenreIds() {
+        Movie::delete(1);
+        $obj = (object) array(
+            'id' => 1,
+            'original_title' => 'title',
+            'poster_path' => '/path.jpg',
+            'release_date' => '2016-10-10',
+            'overview' => 'this is an overview',
+            'genre_ids' => array(27, 53)
         );
         $out = Movie::createFromObject($obj);
         $this->assertMovieEqualToObj($obj, $out);

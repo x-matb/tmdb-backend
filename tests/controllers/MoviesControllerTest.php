@@ -60,4 +60,13 @@ class MoviesControllerTest extends TestCase
         $controller->movieService = $mock;
         $this->assertInstanceOf(Movie::class, $controller->get(array('get'=> array('title'=>'something'))));
     }
+
+    /**
+     * depends testGetCallRetrieve
+     */
+    function testGetCallRetrieveFromDB()
+    {
+        $controller = new MoviesController(array('pk'=> 1));
+        $this->assertInstanceOf(Movie::class, $controller->get(array('get'=> array('title'=>'something'))));
+    }
 }
