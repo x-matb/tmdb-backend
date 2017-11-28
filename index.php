@@ -1,5 +1,4 @@
 <?php
-
 function autoloadPath($path, $name) {
     $file = __DIR__ . '/' . $path . $name . '.php';
     if (file_exists($file)) {

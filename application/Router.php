@@ -34,6 +34,7 @@ class Router
         try {
             $response = $this->dispatchController($controller);
         } catch (Exception $e) {
+            error_log($e);
             http_response_code(500);
             return;
         }
