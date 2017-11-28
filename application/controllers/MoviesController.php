@@ -4,6 +4,12 @@ class MoviesController extends Controller
 {
     public $movieService = null;
 
+    function __construct(array $args = array())
+    {
+        parent::__construct($args);
+        $this->movieService = MovieService::getInstance();
+    }
+
     function get($request)
     {
         $movie = Movie::get($this->args['pk']);
@@ -11,12 +17,6 @@ class MoviesController extends Controller
             $movie = Movie::createFromObject($this->movieService->retrieve($this->args['pk']));
         }
         return $movie;
-    }
-
-    function __construct(array $args = array())
-    {
-        parent::__construct($args);
-        $this->movieService = MovieService::getInstance();
     }
 
     function list($request)
