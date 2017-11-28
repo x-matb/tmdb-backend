@@ -14,8 +14,10 @@ class CachedMoviesController extends MoviesController {
         $pk = $this->args['pk'];
         $cacheKey = "get-{$pk}";
         if ($data = $this->cacheService->get($cacheKey)) {
+            error_log("get {$cacheKey} cache hit");
             return $data;
         } else {
+            error_log("get {$cacheKey} cache miss");
             $data = parent::get($request);
             $this->cacheService->set($cacheKey, $data);
             return $data;
@@ -32,8 +34,10 @@ class CachedMoviesController extends MoviesController {
         }
 
         if ($data = $this->cacheService->get($cacheKey)) {
+            error_log("list {$cacheKey} cache hit");
             return $data;
         } else {
+            error_log("list {$cacheKey} cache miss");
             $data = parent::list($request);
             $this->cacheService->set($cacheKey, $data);
             return $data;

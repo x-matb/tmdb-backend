@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 function autoloadPath($path, $name) {
     $file = __DIR__ . '/' . $path . $name . '.php';
     if (file_exists($file)) {
@@ -17,11 +19,11 @@ function autoload($name) {
 }
 
 spl_autoload_register('autoload');
-
+require __DIR__ . '/vendor/autoload.php';
 
 $urls = Array(
-    "/^\/movies\/?$/" => 'MoviesController',
-    '/^\/movies\/(?<pk>[0-9]+)\/?$/' => 'MoviesController'
+    "/^\/movies\/?$/" => 'CachedMoviesController',
+    '/^\/movies\/(?<pk>[0-9]+)\/?$/' => 'CachedMoviesController'
 );
 
 
