@@ -60,14 +60,12 @@ class MovieService implements MovieServiceInterface
 
     function search($title, $page=1): array
     {
-        # TODO: add cache to search
         $query = array('query'=> $title, 'page'=> $page);
         return $this->request('search/movie', $query)->results;
     }
 
     function upcomings($page=1): array
     {
-        # TODO: add cache to upcomings
         return $this->request('movie/upcoming', array('page'=>$page))->results;
     }
 

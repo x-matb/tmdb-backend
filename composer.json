@@ -5,7 +5,8 @@
         }
     },
     "require": {
-        "php": "7.0.22"
+        "php": "7.0.22",
+		"predis/predis": "^1.1"
     },
 	"require-dev": {
 		"phpunit/phpunit": "^6.4"

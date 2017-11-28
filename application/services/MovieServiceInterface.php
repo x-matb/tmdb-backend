@@ -8,4 +8,5 @@ interface MovieServiceInterface
 
     function retrieve($id): stdClass;
 
+    function genreList(): array;
 }
